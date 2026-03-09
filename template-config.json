@@ -1,0 +1,41 @@
+{
+  "template_id": "mpx_object_worship_01",
+  "name": "MPX Object Worship Spotlight",
+  "created_at": "2026-03-09T00:00:00Z",
+  "version": "1.0.0",
+
+  "theme": {
+    "style": "Object Worship",
+    "description": "Pure product cinema. Floating in absolute darkness with cinematic gold spotlight. Premium and street.",
+    "colors": ["#040404", "#DCA946", "#FFFFFF"],
+    "mood": "Dark, premium, quiet authority, elegant, cinematic",
+    "tags": ["dark", "gold", "premium", "cannabis", "spotlight"]
+  },
+
+  "capabilities": {
+    "products_per_cycle": 1,
+    "cycles_through_all_products": true
+  },
+
+  "animation": {
+    "duration": 10,
+    "fps": 30,
+    "entrance_duration": 2.5,
+    "idle_duration": 5.0,
+    "exit_duration": 2.5,
+    "uses_plugins": ["SplitText"]
+  },
+
+  "assets": {
+    "background": "assets/mpx_gold_spotlight.png",
+    "overlays": [],
+    "icons": [],
+    "fonts": ["Montserrat"]
+  },
+
+  "technical": {
+    "resolution": "1920x1080",
+    "performance": "optimized",
+    "browser_compatibility": "chrome_latest"
+  }
+}

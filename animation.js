@@ -5,7 +5,7 @@ let currentBatch = 0;
 
 async function loadProducts() {
   try {
-    const response = await fetch('./products.json');
+    const response = await fetch('./products.json', { cache: 'no-store' });
     const data = await response.json();
     PRODUCTS = data.products || [];
   } catch (error) {

@@ -110,79 +110,91 @@ function animateCycle(batchIndex) {
   const discountedPrices = document.querySelectorAll('.discounted-price');
 
   // SplitText for names
-  const splitNames = new SplitText(names, {type: "words,chars"});
+  let splitNamesChars = [];
+  try {
+    const splitNames = new SplitText(names, {type: "words,chars"});
+    splitNamesChars = splitNames.chars || [];
+  } catch(e) {
+    console.warn("SplitText error:", e);
+    splitNamesChars = Array.from(names);
+  }
 
   const tl = gsap.timeline({
     onComplete: () => {
-      splitNames.revert();
+      // Revert not needed as we nuke the innerHTML next cycle anyway, but good practice
       animateCycle(batchIndex + 1);
     }
   });
 
+  const allTextElements = [...brands, ...splitNamesChars, ...strains, ...originalPrices, ...discountedPrices].filter(Boolean);
+
   // Reset opacity
   gsap.set(productEls, { opacity: 1 });
-  gsap.set([...brands, ...strains, ...originalPrices, ...discountedPrices], { opacity: 0 });
-  gsap.set(imageContainers, { scale: 0.8, opacity: 0, y: 50, rotation: -5 });
-  gsap.set(splitNames.chars, { opacity: 0, y: 20 });
+  if(allTextElements.length > 0) gsap.set(allTextElements, { opacity: 0 });
+  if(imageContainers.length > 0) gsap.set(imageContainers, { scale: 0.8, opacity: 0, y: 50, rotation: -5 });
 
   // Phase 1: Entrance
-  tl.to(imageContainers, {
-    scale: 1,
-    opacity: 1,
-    y: 0,
-    rotation: 0,
-    duration: 2.5,
-    ease: "power3.out",
-    stagger: 0.2
-  }, 0)
-  // Continuous slow rotation for the object worship feel
-  .to(imageContainers, {
-    y: -20,
-    rotation: 2,
-    duration: 4,
-    ease: "sine.inOut",
-    yoyo: true,
-    repeat: 1
-  }, 1)
+  if(imageContainers.length > 0) {
+    tl.to(imageContainers, {
+      scale: 1,
+      opacity: 1,
+      y: 0,
+      rotation: 0,
+      duration: 2.5,
+      ease: "power3.out",
+      stagger: 0.2
+    }, 0)
+    .to(imageContainers, {
+      y: -20,
+      rotation: 2,
+      duration: 4,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: 1
+    }, 1);
+  }
 
   // Text entrance
-  .to(brands, { opacity: 1, y: -10, duration: 1, ease: "power2.out" }, 1)
-  .to(splitNames.chars, {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    stagger: 0.02,
-    ease: "power3.out"
-  }, 1.2)
-  .to(strains, { opacity: 1, x: 10, duration: 1, ease: "power2.out" }, 1.5)
+  if(brands.length > 0) tl.to(brands, { opacity: 1, y: -10, duration: 1, ease: "power2.out" }, 1);
+  if(splitNamesChars.length > 0) {
+    tl.to(splitNamesChars, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      stagger: 0.02,
+      ease: "power3.out"
+    }, 1.2);
+  }
+  if(strains.length > 0) tl.to(strains, { opacity: 1, x: 10, duration: 1, ease: "power2.out" }, 1.5);
 
   // Pricing
-  if(originalPrices.length > 0) {
+  if(originalPrices.length > 0 && discountedPrices.length > 0) {
     tl.to(originalPrices, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 2)
       .to(discountedPrices, { opacity: 1, scale: 1.2, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 2.5)
       .to(discountedPrices, { scale: 1, duration: 0.5, ease: "power2.out" }, 3.3);
-  } else {
+  } else if(discountedPrices.length > 0) {
     tl.to(discountedPrices, { opacity: 1, scale: 1.2, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 2)
       .to(discountedPrices, { scale: 1, duration: 0.5, ease: "power2.out" }, 2.8);
   }
 
-  // Phase 2: Living Moment (just waiting for the sine ease above)
-
   // Phase 3: Exit
-  tl.to(imageContainers, {
+  tl.to(imageContainers.length > 0 ? imageContainers : {}, {
     opacity: 0,
     scale: 1.1,
     y: -50,
     duration: 1.5,
     ease: "power2.in"
-  }, 7.5)
-  .to([...brands, ...splitNames.chars, ...strains, ...originalPrices, ...discountedPrices], {
-    opacity: 0,
-    y: -20,
-    duration: 1,
-    stagger: 0.05,
-    ease: "power2.in"
   }, 7.5);
+
+  if(allTextElements.length > 0) {
+    tl.to(allTextElements, {
+      opacity: 0,
+      y: -20,
+      duration: 1,
+      stagger: 0.05,
+      ease: "power2.in"
+    }, 7.5);
+  }
 }
 
 function startCycle() {

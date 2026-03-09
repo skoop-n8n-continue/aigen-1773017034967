@@ -121,7 +121,7 @@ function animateCycle(batchIndex) {
 
   // Reset opacity
   gsap.set(productEls, { opacity: 1 });
-  gsap.set([brands, strains, originalPrices, discountedPrices], { opacity: 0 });
+  gsap.set([...brands, ...strains, ...originalPrices, ...discountedPrices], { opacity: 0 });
   gsap.set(imageContainers, { scale: 0.8, opacity: 0, y: 50, rotation: -5 });
   gsap.set(splitNames.chars, { opacity: 0, y: 20 });
 
@@ -176,7 +176,7 @@ function animateCycle(batchIndex) {
     duration: 1.5,
     ease: "power2.in"
   }, 7.5)
-  .to([brands, splitNames.chars, strains, originalPrices, discountedPrices], {
+  .to([...brands, ...splitNames.chars, ...strains, ...originalPrices, ...discountedPrices], {
     opacity: 0,
     y: -20,
     duration: 1,

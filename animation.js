@@ -185,4 +185,9 @@ function animateCycle(batchIndex) {
   }, 7.5);
 }
 
+function startCycle() {
+  animateCycle(0);
+}
+
 window.addEventListener('DOMContentLoaded', loadProducts);
+
